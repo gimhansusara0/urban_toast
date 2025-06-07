@@ -27,7 +27,7 @@ class LoadingScreen extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 height: 1.2,
-                fontFamily: 'poetsOne',
+                fontFamily: 'PoetsenOne',
                 fontSize: 50,
                 
               ),),
@@ -38,7 +38,7 @@ class LoadingScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'us_modern',
+                fontFamily: 'PlaywriteUSModern',
               ),
               ),
             ),
