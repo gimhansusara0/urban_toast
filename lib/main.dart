@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:urban_toast/app.dart';
+import 'package:urban_toast/providers/home_category_provider.dart';
 
 const Color darkColor = Color(0xFF0D0D0D);
 const Color accentColor = Color(0xFFBF784E);
 const Color darkHighlight = Color(0xFF1F1E1F);
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider
+  (providers: [
+    ChangeNotifierProvider(create: (_) => HomeCategoryProvider())
+  ],
+  child: const MyApp()));
 }
 
 // Define the light theme
