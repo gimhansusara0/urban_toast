@@ -78,8 +78,17 @@ flutter:
       fonts:
         - asset: 'assets/fonts/monserrat/Montserrat-Regular.ttf'
         - asset: 'assets/fonts/monserrat/Montserrat-Medium.ttf'
+    
+    - family: PlaywriteUSModern
+      fonts:
+        - asset: 'assets/fonts/playwrite_us_modern/PlaywriteUSModern-Regular.ttf'
+
+    - family: PoetsenOne
+      fonts:
+        - asset: 'assets/fonts/poetsenOne/PoetsenOne-Regular.ttf'
+
   #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  #         style: italicassets\fonts\poetsenOne\PoetsenOne-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
