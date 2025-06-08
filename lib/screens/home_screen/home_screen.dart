@@ -33,11 +33,14 @@ Widget _portraitBuilder(BuildContext context) {
     width: double.infinity,
     height: MediaQuery.of(context).size.height,
     child: SingleChildScrollView(
-      child: const Column(
+      child: Column(
         children: [
           TopRibbon(),
           PromoCard(),
-          CategoryScroller(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            child: CategoryScroller(),
+          ),
           ProductScroller()
         ],
 

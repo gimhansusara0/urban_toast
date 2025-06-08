@@ -16,7 +16,7 @@ class CategoryScroller extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
           child: Text('Categories',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w500
           ),),
         ),

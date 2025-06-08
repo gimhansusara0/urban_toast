@@ -15,47 +15,50 @@ class ProductScroller extends StatelessWidget {
         ? ProductData.getAllProducts()
         : ProductData.getProductsByCategory(categoryId);
 
-    return SizedBox(
-      height: 180,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: products.length,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        itemBuilder: (_, index) {
-          final product = products[index];
-          return Card(
-            margin: const EdgeInsets.only(right: 10),
-            elevation: 3,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Container(
-              width: 140,
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        product.image,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 180,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: products.length,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          itemBuilder: (_, index) {
+            final product = products[index];
+            return Card(
+              margin: const EdgeInsets.only(right: 10),
+              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Container(
+                width: 140,
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          product.image,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text('\$${product.price.toStringAsFixed(2)}'),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      product.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text('\$${product.price.toStringAsFixed(2)}'),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
