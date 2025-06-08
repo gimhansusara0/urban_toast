@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/menu_screen/components/menu_category_scroller.dart';
+import 'package:urban_toast/screens/menu_screen/components/menu_product_scroller.dart';
 import 'package:urban_toast/screens/menu_screen/components/products_top_bar.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -25,17 +26,16 @@ Widget _portraitBuilder(BuildContext context) {
     width: double.infinity,
     height: MediaQuery.of(context).size.height,
     child: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProductsTopBar(),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: MenuCategoryScroller(),
-            )
-          ],
-      
-        ),
+      child: Column(
+        children: [
+          ProductsTopBar(),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: MenuCategoryScroller(),
+          ),
+          Expanded(child: MenuProductScroller())
+        ],
+            
       ),
     ),
   );

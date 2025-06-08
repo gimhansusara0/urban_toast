@@ -5,7 +5,7 @@ import 'package:urban_toast/screens/product_detail_screen/components/product_img
 
 class ProductDetail extends StatelessWidget {
   final Product product;
-  const ProductDetail({super.key,required this.product});
+  const ProductDetail({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +18,11 @@ class ProductDetail extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: ProductImage(product: product,),
+                child: ProductImage(product: product),
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: ProductContent(product: product,),
+                child: ProductContent(product: product),
               ),
             ],
           ),
