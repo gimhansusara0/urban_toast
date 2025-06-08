@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/home_screen/components/category_scroller.dart';
+import 'package:urban_toast/screens/home_screen/components/product_scroller.dart';
 import 'package:urban_toast/screens/home_screen/components/promo_card.dart';
 import 'package:urban_toast/screens/home_screen/components/top_ribbon.dart';
 
@@ -32,11 +33,12 @@ Widget _portraitBuilder(BuildContext context) {
     width: double.infinity,
     height: MediaQuery.of(context).size.height,
     child: SingleChildScrollView(
-      child: Column(
+      child: const Column(
         children: [
           TopRibbon(),
           PromoCard(),
           CategoryScroller(),
+          ProductScroller()
         ],
 
       ),
@@ -46,6 +48,5 @@ Widget _portraitBuilder(BuildContext context) {
 
 Widget _landscapeBuilder(BuildContext context) {
   return Center(
-    child: Text('Touchable'),
   );
 }

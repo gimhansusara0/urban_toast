@@ -21,7 +21,7 @@ class CategoryScroller extends StatelessWidget {
           ),),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: SizedBox(
             height: 30,
             child: ListView.builder(
