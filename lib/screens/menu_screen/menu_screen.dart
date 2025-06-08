@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:urban_toast/screens/menu_screen/components/landscape/landscape_menu_category_scroller.dart';
 import 'package:urban_toast/screens/menu_screen/components/menu_category_scroller.dart';
 import 'package:urban_toast/screens/menu_screen/components/menu_product_scroller.dart';
 import 'package:urban_toast/screens/menu_screen/components/products_top_bar.dart';
@@ -42,6 +43,31 @@ Widget _portraitBuilder(BuildContext context) {
 }
 
 Widget _landscapeBuilder(BuildContext context) {
-  return Center(
+  return SizedBox(
+    width: double.infinity,
+    height: MediaQuery.of(context).size.height,
+    child: SafeArea(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text('Menu', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
+                ),
+            SizedBox(
+              height: 50,
+              child: LandscapeMenuCategoryScroller()),
+            Expanded(child: MenuProductScroller(crossaxiscount: 4,))
+              ],
+            ),
+          )
+          
+        ],
+            
+      ),
+    ),
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/cart_screen/cart.dart';
 import 'package:urban_toast/screens/home_screen/home_screen.dart';
 import 'package:urban_toast/screens/menu_screen/menu_screen.dart';
+import 'package:urban_toast/screens/user_account/user_account.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -16,7 +17,7 @@ class _MainAppState extends State<MainApp> {
       HomeScreen(),
       ProductScreen(),
       Cart(),
-      Icon(Icons.person),
+      MyUserAccount(),
   ];
 
   @override
