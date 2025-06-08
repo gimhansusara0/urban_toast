@@ -16,7 +16,7 @@ final List<String> imgList = [
   Widget build(BuildContext context) {
     return  CarouselSlider(
       options: CarouselOptions(
-        height: 250,
+        height: 300,
         autoPlay: true,
         enlargeCenterPage: true,
         enableInfiniteScroll: true,

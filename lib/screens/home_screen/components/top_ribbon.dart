@@ -18,19 +18,8 @@ class TopRibbon extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.w500
               ),),
-              SizedBox(
-                width: 80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Icon(Icons.notifications,
-                    color: Theme.of(context).primaryColor,),
-                    
-                    Icon(Icons.shopping_cart,
-                    color: Theme.of(context).primaryColor,),
-                  ],
-                ),
-              )
+              Icon(Icons.notifications,
+              color: Theme.of(context).primaryColor,)
             ],
           ),
         ),

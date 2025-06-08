@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/app.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
+import 'package:urban_toast/providers/menu_category_provider.dart';
 
 const Color darkColor = Color(0xFF0D0D0D);
 const Color accentColor = Color.fromARGB(255, 182, 107, 63);
@@ -10,7 +11,8 @@ const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 void main() {
   runApp(MultiProvider
   (providers: [
-    ChangeNotifierProvider(create: (_) => HomeCategoryProvider())
+    ChangeNotifierProvider(create: (_) => HomeCategoryProvider()),
+    ChangeNotifierProvider(create: (_)=> MenuCategoryProvider()),
   ],
   child: const MyApp()));
 }

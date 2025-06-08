@@ -10,7 +10,7 @@ class ProductImage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    String product_name = product.name.length > 15 ? product.name.substring(0,15) + '...' : product.name;
+    String productName = product.name.length > 15 ? '${product.name.substring(0,15)}...' : product.name;
 
     return Container(
       width: double.infinity,
@@ -43,7 +43,7 @@ class ProductImage extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         PageRouteBuilder(
-                          transitionDuration: Duration(milliseconds: 500),
+                          transitionDuration: Duration(milliseconds: 300),
                           pageBuilder: (_, __, ___) => MainApp(),
                           transitionsBuilder: (_, animation, __, child) {
                             final curved = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
@@ -73,8 +73,8 @@ class ProductImage extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: Theme.of(context).brightness == Brightness.light
                   ? [
-                      const Color(0xFFFFFFF).withOpacity(0.1),
-                      const Color(0xFFFFFFF).withOpacity(0.05),
+                      const Color(0x0fffffff).withOpacity(0.1),
+                      const Color(0x0fffffff).withOpacity(0.05),
                     ]
                   : [
                       const Color(0xFF000000).withOpacity(0.1),
@@ -89,8 +89,8 @@ class ProductImage extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: Theme.of(context).brightness == Brightness.light
                   ? [
-                      const Color(0xFFFFFFF).withOpacity(0.1),
-                      const Color(0xFFFFFFF).withOpacity(0.05),
+                      const Color(0x0fffffff).withOpacity(0.1),
+                      const Color(0x0fffffff).withOpacity(0.05),
                     ]
                   : [
                       const Color(0xFF000000).withOpacity(0.1),
@@ -107,7 +107,7 @@ class ProductImage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product_name,
+                        productName,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,

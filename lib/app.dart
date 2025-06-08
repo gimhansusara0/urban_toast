@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/home_screen/home_screen.dart';
+import 'package:urban_toast/screens/menu_screen/menu_screen.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -12,7 +13,8 @@ class _MainAppState extends State<MainApp> {
   int _currentIndex = 0;
   List<Widget> body = const[
       HomeScreen(),
-      Icon(Icons.menu),
+      ProductScreen(),
+      Icon(Icons.history),
       Icon(Icons.person),
   ];
 
@@ -25,8 +27,10 @@ class _MainAppState extends State<MainApp> {
         child: body[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).primaryColorDark,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).cardColor,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _currentIndex,
         onTap: (int newIndex){
           setState(() {
@@ -39,8 +43,12 @@ class _MainAppState extends State<MainApp> {
             icon: Icon(Icons.home),
             ),
           BottomNavigationBarItem(
-            label: 'Menu',
-            icon: Icon(Icons.menu),
+            label: 'Products',
+            icon: Icon(Icons.coffee),
+            ),
+            BottomNavigationBarItem(
+            label: 'Cart',
+            icon: Icon(Icons.shopping_cart),
             ),
          BottomNavigationBarItem(
             label: 'Profile',
