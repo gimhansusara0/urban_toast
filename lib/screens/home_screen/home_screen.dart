@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/home_screen/components/category_scroller.dart';
 import 'package:urban_toast/screens/home_screen/components/product_scroller.dart';
 import 'package:urban_toast/screens/home_screen/components/promo_card.dart';
+import 'package:urban_toast/screens/home_screen/components/search_bar.dart';
 import 'package:urban_toast/screens/home_screen/components/top_ribbon.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,12 +37,19 @@ Widget _portraitBuilder(BuildContext context) {
       child: Column(
         children: [
           TopRibbon(),
-          PromoCard(),
+          Search_Bar(),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            child: PromoCard(),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: CategoryScroller(),
           ),
-          ProductScroller()
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: ProductScroller(),
+          )
         ],
 
       ),

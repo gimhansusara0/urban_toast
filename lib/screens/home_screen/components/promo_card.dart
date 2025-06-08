@@ -4,9 +4,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 class PromoCard extends StatelessWidget {
 
 final List<String> imgList = [
-    'https://i.ibb.co/ZRLBhqBF/carousel-item-1.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuy8nVIdf1DGWzOF21o0o4g1isRLvWweAq1A&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_q3RgbT5l5mBlVr4thFsw_wfe6ZPSDuTm1g&s',
+    'https://img.playbook.com/8LW0YP0JEWP4pXzvnpIHTBLzIjrVVLE-HifrNAFo2Fg/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzNhODJkNzc1/LWQxOWMtNDZiZi1h/NDQzLTk5NjZlYzE5/YTUzZg',
+    'https://img.playbook.com/rck2gJxZm9Q4aGPk7EmBqQ08UtpGf07Tx0hOMtPto6w/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzVlMDdkMTgy/LWVlNzYtNDhhYy1h/NTJhLWQzNDU5ZTNm/OWVkYQ',
+    'https://img.playbook.com/5CP5q40-eclPTwTZCZ7ss3rhTqkV2qOwGIYZJ4ipXSs/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljL2NhNWVmMjNi/LWEyYjktNDA4Ny05/YjRjLTVkODcwMmQ2/MTc4MQ',
   ];
 
 
@@ -14,7 +14,7 @@ final List<String> imgList = [
   Widget build(BuildContext context) {
     return  CarouselSlider(
       options: CarouselOptions(
-        height: 300,
+        height: 250,
         autoPlay: true,
         enlargeCenterPage: true,
         enableInfiniteScroll: true,

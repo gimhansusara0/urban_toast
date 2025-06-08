@@ -5,7 +5,7 @@ import 'package:urban_toast/providers/home_category_provider.dart';
 
 const Color darkColor = Color(0xFF0D0D0D);
 const Color accentColor = Color(0xFFBF784E);
-const Color darkHighlight = Color(0xFF1F1E1F);
+const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 
 void main() {
   runApp(MultiProvider
@@ -31,7 +31,7 @@ final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: accentColor,
     scaffoldBackgroundColor: darkColor,
-    cardColor: darkHighlight,
+    cardColor: const Color.fromARGB(255, 36, 36, 36),
     textTheme: TextTheme(
       bodyLarge: TextStyle(
           fontSize: 16,

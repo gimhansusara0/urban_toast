@@ -26,8 +26,8 @@ class ProductScroller extends StatelessWidget {
           itemBuilder: (_, index) {
             final product = products[index];
             return Card(
+              color: Theme.of(context).cardColor,
               margin: const EdgeInsets.only(right: 10),
-              elevation: 3,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: Container(
                 width: 140,

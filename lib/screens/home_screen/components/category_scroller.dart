@@ -13,7 +13,7 @@ class CategoryScroller extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
           child: Text('Categories',
           style: TextStyle(
             fontSize: 18,
