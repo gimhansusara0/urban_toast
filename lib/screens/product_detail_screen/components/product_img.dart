@@ -29,8 +29,8 @@ class ProductImage extends StatelessWidget {
                     color: Theme.of(context).primaryColorDark,
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  child: Icon(Icons.arrow_back, color: Colors.white,)),
-                Icon(Icons.add, color: Colors.white,)
+                  child: const Icon(Icons.arrow_back, color: Colors.white,)),
+                const Icon(Icons.add, color: Colors.white,)
               ],
             ),
           ),
@@ -38,13 +38,18 @@ class ProductImage extends StatelessWidget {
             width: double.infinity, 
             height: 100, 
             borderRadius: 25, 
-             linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF00000).withOpacity(0.1),
-                Color(0xFF00000).withOpacity(0.05),
-              ],
+            linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: Theme.of(context).brightness == Brightness.light
+                ? [
+                    const Color(0xFFFFFFF).withOpacity(0.1),
+                    const Color(0xFFFFFFF).withOpacity(0.05),
+                  ]
+                : [
+                    const Color(0xFF000000).withOpacity(0.1),
+                    const Color(0xFF000000).withOpacity(0.05),
+                  ],
               stops: [
                 0.1,
                 1,
@@ -54,16 +59,21 @@ class ProductImage extends StatelessWidget {
            borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFffffff).withOpacity(0.5),
-                Color((0xFFFFFFFF)).withOpacity(0.5),
-            ],
+            colors: Theme.of(context).brightness == Brightness.light
+                ? [
+                    const Color(0xFFFFFFF).withOpacity(0.1),
+                    const Color(0xFFFFFFF).withOpacity(0.05),
+                  ]
+                : [
+                    const Color(0xFF000000).withOpacity(0.1),
+                    const Color(0xFF000000).withOpacity(0.05),
+                  ],
   ),
   child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+      const Padding(
+        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:urban_toast/app.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
 import 'package:urban_toast/screens/product_detail_screen/product_detail.dart';
 
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       home: Scaffold(
-        body: ProductDetail(),
+        body: MainApp(),
       ),
     );
   }
