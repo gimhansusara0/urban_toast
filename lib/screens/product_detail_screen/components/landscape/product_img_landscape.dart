@@ -3,10 +3,10 @@ import 'package:glassmorphism/glassmorphism.dart';
 import 'package:urban_toast/app.dart';
 import 'package:urban_toast/models/product_model.dart';
 
-class ProductImage extends StatelessWidget {
+class ProductImageLandscape extends StatelessWidget {
   final Product product;
   final double height;
-  const ProductImage({super.key, required this.product, this.height = 0.5});
+  const ProductImageLandscape({super.key, required this.product, this.height = 0.5});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class ProductImage extends StatelessWidget {
           ),
           GlassmorphicContainer(
             width: double.infinity,
-            height: 100,
+            height: 120,
             borderRadius: 25,
             linearGradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -124,76 +124,20 @@ class ProductImage extends StatelessWidget {
                         productName,
                         style: TextStyle(
                           fontSize: 22,
+                          decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
                       Text(
                         'Urban Toast',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12, decoration: TextDecoration.none),
                       ),
                     ],
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                  child: SizedBox(
-                    width: 60,
-                    height: 80,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 28,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColorDark,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Icon(
-                                Icons.coffee,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            Container(
-                              height: 40,
-                              width: 28,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColorDark,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Icon(
-                                Icons.shopping_bag,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              Text('4.6'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                
               ],
             ),
           ),

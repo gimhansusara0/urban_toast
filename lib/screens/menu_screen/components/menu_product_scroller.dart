@@ -55,7 +55,7 @@ class MenuProductScroller extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.name.length > 13 ? product.name.substring(0, 13) + '...' : product.name,
+                        product.name.length > 13 ? '${product.name.substring(0, 13)}...' : product.name,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

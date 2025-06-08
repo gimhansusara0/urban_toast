@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class PromoCard extends StatelessWidget {
-PromoCard({super.key});
-final List<String> imgList = [
+  final double height_val;
+  final Alignment alignment;
+  PromoCard({super.key, this.height_val = 300,  this.alignment = Alignment.center});
+  final List<String> imgList = [
     'https://img.playbook.com/8LW0YP0JEWP4pXzvnpIHTBLzIjrVVLE-HifrNAFo2Fg/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzNhODJkNzc1/LWQxOWMtNDZiZi1h/NDQzLTk5NjZlYzE5/YTUzZg',
     'https://img.playbook.com/rck2gJxZm9Q4aGPk7EmBqQ08UtpGf07Tx0hOMtPto6w/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzVlMDdkMTgy/LWVlNzYtNDhhYy1h/NTJhLWQzNDU5ZTNm/OWVkYQ',
     'https://img.playbook.com/5CP5q40-eclPTwTZCZ7ss3rhTqkV2qOwGIYZJ4ipXSs/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljL2NhNWVmMjNi/LWEyYjktNDA4Ny05/YjRjLTVkODcwMmQ2/MTc4MQ',
   ];
 
- 
-
-
   @override
   Widget build(BuildContext context) {
-    return  CarouselSlider(
+    return CarouselSlider(
       options: CarouselOptions(
-        height: 300,
+        height: height_val,
         autoPlay: true,
         enlargeCenterPage: true,
         enableInfiniteScroll: true,
@@ -29,6 +28,7 @@ final List<String> imgList = [
               child: Image.network(
                 item,
                 fit: BoxFit.cover,
+                alignment: alignment,
                 width: double.infinity,
               ),
             );

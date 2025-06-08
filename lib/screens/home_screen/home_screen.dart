@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -29,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 Widget _portraitBuilder(BuildContext context) {
-  
   return SizedBox(
     width: double.infinity,
     height: MediaQuery.of(context).size.height,
@@ -49,15 +47,46 @@ Widget _portraitBuilder(BuildContext context) {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ProductScroller(),
-          )
+          ),
         ],
-
       ),
     ),
   );
 }
 
 Widget _landscapeBuilder(BuildContext context) {
-  return Center(
+  return SizedBox(
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height,
+    child: SingleChildScrollView(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TopRibbon(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Search_Bar(),
+                ),
+                PromoCard(height_val: 180, alignment: Alignment.topCenter,),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  child: CategoryScroller()),
+                ProductScroller()
+            ],),
+          ),
+        ],
+      ),
+    ),
   );
 }
