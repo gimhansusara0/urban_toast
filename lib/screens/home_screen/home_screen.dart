@@ -36,7 +36,7 @@ Widget _portraitBuilder(BuildContext context) {
         children: [
           TopRibbon(),
           PromoCard(),
-          CategoryScroller()
+          CategoryScroller(),
         ],
 
       ),
