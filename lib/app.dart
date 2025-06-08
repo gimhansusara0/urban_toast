@@ -25,6 +25,8 @@ class _MainAppState extends State<MainApp> {
         child: body[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).primaryColorDark,
         currentIndex: _currentIndex,
         onTap: (int newIndex){
           setState(() {
