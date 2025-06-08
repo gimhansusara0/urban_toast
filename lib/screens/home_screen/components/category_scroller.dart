@@ -9,29 +9,48 @@ class CategoryScroller extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<HomeCategoryProvider>(context);
     final categories = categoryProvider.allCategories;
-    return SizedBox(
-      height: 50,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (_, index) {
-          final category = categories[index];
-          final isSelected = category.id == categoryProvider.selectedCategoryId;
-
-          return GestureDetector(
-            onTap: () => categoryProvider.setCategory(category.id),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.brown[200] : Colors.grey[300],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(child: Text(category.name)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
+          child: Text('Categories',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500
+          ),),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          child: SizedBox(
+            height: 30,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (_, index) {
+                final category = categories[index];
+                final isSelected = category.id == categoryProvider.selectedCategoryId;
+          
+                return GestureDetector(
+                  onTap: () => categoryProvider.setCategory(category.id),
+                  child: Container(
+                        padding: EdgeInsets.fromLTRB(15, 2, 15, 2),
+                        margin: EdgeInsets.only(left: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Center(child: Text(category.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400
+                        ),),),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
 
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_toast/screens/home_screen/components/category_scroller.dart';
+import 'package:urban_toast/screens/home_screen/components/promo_card.dart';
 import 'package:urban_toast/screens/home_screen/components/top_ribbon.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ Widget _portraitBuilder(BuildContext context) {
       child: Column(
         children: [
           TopRibbon(),
+          PromoCard(),
           CategoryScroller()
         ],
 

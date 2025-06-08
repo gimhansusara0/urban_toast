@@ -22,7 +22,7 @@ class _MainAppState extends State<MainApp> {
       body: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(child: body[_currentIndex]),
+        child: body[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
