@@ -18,17 +18,20 @@ class _ProductContentState extends State<ProductContent> {
     return Expanded(
       child: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-              const Text('Description', style: TextStyle(fontSize: 15)),
-              const SizedBox(height: 10),
-              const Text(
-                'Dark, rich espresso lies in wait under a smoothed and stretched layer of thick milk foam.',
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+            
+              children: [
+                const Text('Description', style: TextStyle(fontSize: 15)),
+                const SizedBox(height: 10),
+                 Text(
+                  widget.product.description,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           Column(
@@ -86,7 +89,7 @@ class _ProductContentState extends State<ProductContent> {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text('Price'), SizedBox(height: 5), Text('Rs.3.40')],
+                children: [Text('Price'), SizedBox(height: 5), Text('\$${widget.product.price.toStringAsFixed(2)}')],
               ),
 
               SizedBox(

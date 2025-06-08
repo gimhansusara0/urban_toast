@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:urban_toast/app.dart';
+import 'package:urban_toast/models/product_model.dart';
 
 class ProductImage extends StatelessWidget {
-  const ProductImage({super.key});
+  final Product product;
+  const ProductImage({super.key, required this.product});
 
+  
   @override
   Widget build(BuildContext context) {
+    String product_name = product.name.length > 15 ? product.name.substring(0,15) + '...' : product.name;
+
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.5,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          image: DecorationImage(image: NetworkImage('https://www.foodandwine.com/thmb/V1OEgtLQGUv_w2Fvm40WMLsJ4rk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Indulgent-Hot-Chocolate-FT-RECIPE0223-fd36942ef266417ab40440374fc76a15.jpg'),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          image: NetworkImage(product.image),
           fit: BoxFit.cover,
-          ),
+        ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,126 +36,150 @@ class ProductImage extends StatelessWidget {
                     color: Theme.of(context).primaryColorDark,
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  child: const Icon(Icons.arrow_back, color: Colors.white,)),
-                const Icon(Icons.add, color: Colors.white,)
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        PageRouteBuilder(
+                          transitionDuration: Duration(milliseconds: 500),
+                          pageBuilder: (_, __, ___) => MainApp(),
+                          transitionsBuilder: (_, animation, __, child) {
+                            final curved = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+                            final slide = Tween(begin: Offset(1, 0), end: Offset.zero).animate(curved);
+                           final fade = Tween(begin: 0.0, end: 1.0).animate(curved);
+                            return SlideTransition(
+                              position: slide,
+                              child: FadeTransition(opacity: fade, child: child),
+                            );
+                          },
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
+                ),
+                const Icon(Icons.add, color: Colors.white),
               ],
             ),
           ),
           GlassmorphicContainer(
-            width: double.infinity, 
-            height: 100, 
-            borderRadius: 25, 
+            width: double.infinity,
+            height: 100,
+            borderRadius: 25,
             linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: Theme.of(context).brightness == Brightness.light
-                ? [
-                    const Color(0xFFFFFFF).withOpacity(0.1),
-                    const Color(0xFFFFFFF).withOpacity(0.05),
-                  ]
-                : [
-                    const Color(0xFF000000).withOpacity(0.1),
-                    const Color(0xFF000000).withOpacity(0.05),
-                  ],
-              stops: [
-                0.1,
-                1,
-              ]),
-            border: 0, 
-            blur: 20, 
-           borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: Theme.of(context).brightness == Brightness.light
-                ? [
-                    const Color(0xFFFFFFF).withOpacity(0.1),
-                    const Color(0xFFFFFFF).withOpacity(0.05),
-                  ]
-                : [
-                    const Color(0xFF000000).withOpacity(0.1),
-                    const Color(0xFF000000).withOpacity(0.05),
-                  ],
-  ),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      const Padding(
-        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-        
-            Text('Cappuchino',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-            ),),
-            Text('Hot Coffee',
-            style: TextStyle(
-              color: Colors.white
-            ),),
-          
-          ],
-        ),
-      ),
-
-      Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-        child: SizedBox(
-          width: 60,
-          height: 80,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   Container(
-                    height: 40,
-                    width: 28,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorDark,
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: Icon(Icons.coffee,color: Theme.of(context).primaryColor)),
-                   Container(
-                    height: 40,
-                    width: 28,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorDark,
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: Icon(Icons.shopping_bag, color: Theme.of(context).primaryColor,)),
-                 ],
-               ),
-               Container(
-                width: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).primaryColorDark,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: Theme.of(context).brightness == Brightness.light
+                  ? [
+                      const Color(0xFFFFFFF).withOpacity(0.1),
+                      const Color(0xFFFFFFF).withOpacity(0.05),
+                    ]
+                  : [
+                      const Color(0xFF000000).withOpacity(0.1),
+                      const Color(0xFF000000).withOpacity(0.05),
+                    ],
+              stops: [0.1, 1],
+            ),
+            border: 0,
+            blur: 20,
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: Theme.of(context).brightness == Brightness.light
+                  ? [
+                      const Color(0xFFFFFFF).withOpacity(0.1),
+                      const Color(0xFFFFFFF).withOpacity(0.05),
+                    ]
+                  : [
+                      const Color(0xFF000000).withOpacity(0.1),
+                      const Color(0xFF000000).withOpacity(0.05),
+                    ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product_name,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text('Urban Toast', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
                 ),
-                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.star,color: Theme.of(context).primaryColor,),
-                    Text('4.6')
-                  ],
-                 ),
-               )
-            ],
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  child: SizedBox(
+                    width: 60,
+                    height: 80,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 28,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColorDark,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.coffee,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Container(
+                              height: 40,
+                              width: 28,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColorDark,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.shopping_bag,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              Text('4.6'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      )
-
-
-    ],
-  ),
-  ),
-
-
-
         ],
       ),
     );
