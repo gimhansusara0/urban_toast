@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:urban_toast/app.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -21,10 +22,7 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           Text(
             'Login',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(45, 10, 45, 0),
@@ -39,54 +37,69 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   TextField(
                     controller: emailController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your Email'),
+                    decoration: const InputDecoration(
+                      labelText: 'Enter your Email',
+                    ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10),
                   Text(
                     'Password',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   TextField(
                     controller: passwordController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your Password'),
+                    decoration: const InputDecoration(
+                      labelText: 'Enter your Password',
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                     child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                            onPressed: () {}, child: Text('Login',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800
-                            ),))),
-                  )
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainApp(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           RichText(
             text: TextSpan(
-                text: "Don't have an account? ",
-                style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Theme.of(context).primaryColorDark),
-                children: [
-                  TextSpan(
-                      text: 'Sign Up',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          print('Signup Clicked');
-                        })
-                ]),
-          )
+              text: "Don't have an account? ",
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Theme.of(context).primaryColorDark,
+              ),
+              children: [
+                TextSpan(
+                  text: 'Sign Up',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      print('Signup Clicked');
+                    },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

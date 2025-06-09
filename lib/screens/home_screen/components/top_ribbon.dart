@@ -13,7 +13,7 @@ class TopRibbon extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Welcome Ranuja!',
+              Text('Welcome Lewis!',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500

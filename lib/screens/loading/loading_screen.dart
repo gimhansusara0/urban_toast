@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:urban_toast/screens/auth/register_screen.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
@@ -10,8 +11,8 @@ class LoadingScreen extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/loadingScreen-bg.jpg"),
-            fit: BoxFit.cover
-            ),
+            fit: BoxFit.cover,
+          ),
         ),
 
         width: double.infinity,
@@ -22,24 +23,26 @@ class LoadingScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-              child: Text('Coffee So Good, Your tasts buds will love it', 
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                height: 1.2,
-                fontFamily: 'PoetsenOne',
-                fontSize: 50,
-                
-              ),),
+              child: Text(
+                'Coffee So Good, Your tasts buds will love it',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  height: 1.2,
+                  fontFamily: 'PoetsenOne',
+                  fontSize: 50,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-              child: Text("The best coffee you'll ever taste",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'PlaywriteUSModern',
-              ),
+              child: Text(
+                "The best coffee you'll ever taste",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'PlaywriteUSModern',
+                ),
               ),
             ),
             Container(
@@ -47,22 +50,26 @@ class LoadingScreen extends StatelessWidget {
               height: 100,
               padding: EdgeInsets.all(15),
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(15)
-                  )
+                    borderRadius: BorderRadiusGeometry.circular(15),
+                  ),
                 ),
-                child: Text('Get Started',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontFamily: 'poetsOne'
-                ),)
+                child: Text(
+                  'Get Started',
+                  style: TextStyle(fontSize: 25, fontFamily: 'poetsOne'),
                 ),
-            )
+              ),
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }

@@ -37,15 +37,15 @@ Widget _portraitBuilder(BuildContext context) {
           TopRibbon(),
           Search_Bar(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: PromoCard(),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
             child: CategoryScroller(),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: ProductScroller(),
           ),
         ],
@@ -66,10 +66,7 @@ Widget _landscapeBuilder(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TopRibbon(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Search_Bar(),
-                ),
+                
                 PromoCard(height_val: 180, alignment: Alignment.topCenter,),
               ],
             ),

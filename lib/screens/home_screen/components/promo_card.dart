@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 class PromoCard extends StatelessWidget {
   final double height_val;
   final Alignment alignment;
-  PromoCard({super.key, this.height_val = 300,  this.alignment = Alignment.center});
+  PromoCard({super.key, this.height_val = 250,  this.alignment = Alignment.center});
   final List<String> imgList = [
     'https://img.playbook.com/8LW0YP0JEWP4pXzvnpIHTBLzIjrVVLE-HifrNAFo2Fg/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzNhODJkNzc1/LWQxOWMtNDZiZi1h/NDQzLTk5NjZlYzE5/YTUzZg',
     'https://img.playbook.com/rck2gJxZm9Q4aGPk7EmBqQ08UtpGf07Tx0hOMtPto6w/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzVlMDdkMTgy/LWVlNzYtNDhhYy1h/NTJhLWQzNDU5ZTNm/OWVkYQ',

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:urban_toast/screens/auth/login_page.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -109,7 +110,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       style: TextStyle(color: Theme.of(context).primaryColor),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('Signin Clicked');
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                         })
                 ]),
           )
