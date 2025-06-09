@@ -20,27 +20,7 @@ void main() {
   );
 }
 
-// final GoRouter _router = GoRouter(
-//   routes: [
-//     GoRoute(path: '/',
-//     builder: (context, state) => HomeScreen(),
-//     ),
-    
-//     GoRoute(path: '/regis',
-//     builder: (context, state) => RegisterScreen(),),
 
-//     GoRoute(path: '/login',
-//     builder: (context, state) => LoginPage(),
-//     ),
-
-//     GoRoute(path: '/loading',
-//     builder: (context, state) => LoadingScreen(),
-//     )
-
-//   ]
-// );
-
-// Define the light theme
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: accentColor,
@@ -55,7 +35,6 @@ final ThemeData lightTheme = ThemeData(
   ),
 );
 
-// Define the dark theme
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: accentColor,
