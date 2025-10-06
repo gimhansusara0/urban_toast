@@ -5,7 +5,7 @@ import 'package:urban_toast/providers/menu_category_provider.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
 import 'package:urban_toast/utils/network_manager.dart';
 
-const Color darkColor = Color.fromARGB(255, 0, 2, 24);
+const Color darkColor = Color.fromARGB(255, 0, 1, 17);
 const Color accentColor = Color(0xfffcab0b);
 const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 
@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Urban Toast',
       theme: lightTheme,

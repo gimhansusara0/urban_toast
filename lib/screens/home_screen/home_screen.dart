@@ -45,7 +45,7 @@ Widget _portraitBuilder(BuildContext context) {
             child: CategoryScroller(),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ProductScroller(),
           ),
         ],

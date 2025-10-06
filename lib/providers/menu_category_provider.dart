@@ -24,7 +24,7 @@ class MenuCategoryProvider with ChangeNotifier {
       final fetched = await ApiService.fetchCategories(context);
       _categories = [Category(id: 0, name: 'All'), ...fetched];
     } catch (e) {
-      debugPrint('Error loading categories: $e');
+      debugPrint(' Error loading categories: $e');
     }
 
     _loading = false;

@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:urban_toast/utils/global_refresher.dart';
+
+/// Create a navigator key globally so NetworkManager can access BuildContext
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class NetworkManager with ChangeNotifier {
   bool _isOnline = true;
@@ -26,6 +30,37 @@ class NetworkManager with ChangeNotifier {
     if (hasConnection != _isOnline) {
       _isOnline = hasConnection;
       notifyListeners();
+
+      if (_isOnline) {
+        _triggerGlobalRefresh();
+      }
+    }
+  }
+
+  // When back online, refresh all app data
+  Future<void> _triggerGlobalRefresh() async {
+    try {
+      debugPrint("Reconnected — refreshing all data...");
+      await Future.delayed(const Duration(seconds: 1));
+
+      final ctx = navigatorKey.currentContext;
+      if (ctx != null) {
+        // Show syncing snackbar
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text("Refreshing data after reconnect..."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        await GlobalRefresher.refreshAll(ctx);
+
+        debugPrint("Data refreshed after reconnection");
+      } else {
+        debugPrint("No valid context to refresh");
+      }
+    } catch (e) {
+      debugPrint("Error refreshing after reconnect: $e");
     }
   }
 
@@ -34,7 +69,9 @@ class NetworkManager with ChangeNotifier {
   }
 }
 
+
 // Banner widget
+
 class ConnectionBanner extends StatefulWidget {
   final bool isOnline;
   const ConnectionBanner({super.key, required this.isOnline});
@@ -45,31 +82,39 @@ class ConnectionBanner extends StatefulWidget {
 
 class _ConnectionBannerState extends State<ConnectionBanner> {
   bool _visible = false;
-  Timer? _timer;
+  bool _isSyncing = false;
 
   @override
   void didUpdateWidget(ConnectionBanner oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.isOnline != oldWidget.isOnline) {
-      // When offline, show always
       if (!widget.isOnline) {
-        setState(() => _visible = true);
+        // Always show offline message
+        setState(() {
+          _visible = true;
+          _isSyncing = false;
+        });
       } else {
-        // When back online, show for 3 seconds then fade out
-        setState(() => _visible = true);
-        _timer?.cancel();
-        _timer = Timer(const Duration(seconds: 3), () {
-          if (mounted) setState(() => _visible = false);
+        // When back online: show syncing until refresh finishes
+        setState(() {
+          _visible = true;
+          _isSyncing = true;
+        });
+
+        // Wait for data to refresh before hiding
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            setState(() {
+              _isSyncing = false;
+            });
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted) setState(() => _visible = false);
+            });
+          }
         });
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   @override
@@ -87,13 +132,33 @@ class _ConnectionBannerState extends State<ConnectionBanner> {
           height: 28,
           color: widget.isOnline ? Colors.green : Colors.redAccent,
           alignment: Alignment.center,
-          child: Text(
-            widget.isOnline ? "Back Online" : "Viewing Offline Mode",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (widget.isOnline && _isSyncing)
+                const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                ),
+              if (widget.isOnline && _isSyncing)
+                const SizedBox(width: 6),
+              Text(
+                widget.isOnline
+                    ? (_isSyncing
+                        ? "Back Online — Refreshing..."
+                        : "Back Online — Updated")
+                    : "Viewing Offline Mode",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),

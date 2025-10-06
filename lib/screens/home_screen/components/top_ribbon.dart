@@ -13,13 +13,28 @@ class TopRibbon extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Welcome Lewis!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500
-              ),),
-              Icon(Icons.notifications,
-              color: Theme.of(context).primaryColor,)
+              const Text(
+                'Welcome Lewis!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.notifications,
+                    color: Theme.of(context).primaryColor,
+                    size: 26,
+                  ),
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    color: Theme.of(context).primaryColor,
+                    size: 26,
+                  ),
+                ],
+              ),
             ],
           ),
         ),

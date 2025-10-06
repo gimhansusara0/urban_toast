@@ -4,37 +4,99 @@ import 'package:carousel_slider/carousel_slider.dart';
 class PromoCard extends StatelessWidget {
   final double height_val;
   final Alignment alignment;
-  PromoCard({super.key, this.height_val = 300,  this.alignment = Alignment.center});
-  final List<String> imgList = [
-    'https://img.playbook.com/8LW0YP0JEWP4pXzvnpIHTBLzIjrVVLE-HifrNAFo2Fg/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzNhODJkNzc1/LWQxOWMtNDZiZi1h/NDQzLTk5NjZlYzE5/YTUzZg',
-    'https://img.playbook.com/rck2gJxZm9Q4aGPk7EmBqQ08UtpGf07Tx0hOMtPto6w/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzVlMDdkMTgy/LWVlNzYtNDhhYy1h/NTJhLWQzNDU5ZTNm/OWVkYQ',
-    'https://img.playbook.com/5CP5q40-eclPTwTZCZ7ss3rhTqkV2qOwGIYZJ4ipXSs/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljL2NhNWVmMjNi/LWEyYjktNDA4Ny05/YjRjLTVkODcwMmQ2/MTc4MQ',
+
+  PromoCard({
+    super.key,
+    this.height_val = 220,
+    this.alignment = Alignment.center,
+  });
+
+  final List<Map<String, String>> imgList = [
+    {
+      'path': 'assets/images/promo-1.jpg',
+      'label': 'Freshly Brewed Delights',
+    },
+    {
+      'path': 'assets/images/promo-2.jpg',
+      'label': 'New Arrivals Every Week',
+    },
+    {
+      'path': 'assets/images/promo-3.webp',
+      'label': 'Grab Your Morning Energy',
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: height_val,
-        autoPlay: true,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: true,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 1),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: height_val,
+          autoPlay: true,
+          enlargeCenterPage: false, 
+          enableInfiniteScroll: true,
+          viewportFraction: 0.88,
+          padEnds: true,
+          autoPlayCurve: Curves.easeInOut,
+          autoPlayAnimationDuration: const Duration(milliseconds: 900),
+        ),
+        items: imgList.map((item) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 6), // spacing between cards
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        item['path']!,
+                        fit: BoxFit.cover,
+                        alignment: alignment,
+                      ),
+                      // Gradient overlay
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black54,
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                      // Bottom-left text
+                      Positioned(
+                        bottom: 12,
+                        left: 15,
+                        child: Text(
+                          item['label']!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 4,
+                                color: Colors.black45,
+                                offset: Offset(1, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }).toList(),
       ),
-      items: imgList.map((item) {
-        return Builder(
-          builder: (BuildContext context) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                item,
-                fit: BoxFit.cover,
-                alignment: alignment,
-                width: double.infinity,
-              ),
-            );
-          },
-        );
-      }).toList(),
     );
   }
 }
