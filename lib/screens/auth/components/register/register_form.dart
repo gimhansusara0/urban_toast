@@ -1,119 +1,105 @@
+// lib/screens/auth/components/register/register_form.dart
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:urban_toast/providers/auth/auth_provider.dart';
 import 'package:urban_toast/screens/auth/login_page.dart';
 
-class RegisterForm extends StatefulWidget {
+class RegisterForm extends StatelessWidget {
   const RegisterForm({super.key});
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<RegisterForm> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController secondNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
     return SizedBox(
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
+          const Text(
             'Signup',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(45, 10, 45, 0),
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'First Name',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('First Name',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(
+                  controller: auth.firstNameController,
+                  decoration:
+                      const InputDecoration(labelText: 'Enter your first name'),
+                ),
+                const SizedBox(height: 10),
+                const Text('Second Name',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(
+                  controller: auth.secondNameController,
+                  decoration:
+                      const InputDecoration(labelText: 'Enter your second name'),
+                ),
+                const SizedBox(height: 10),
+                const Text('Email',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(
+                  controller: auth.emailController,
+                  decoration:
+                      const InputDecoration(labelText: 'Enter your Email'),
+                ),
+                const SizedBox(height: 10),
+                const Text('Password',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextField(
+                  controller: auth.passwordController,
+                  obscureText: true,
+                  decoration:
+                      const InputDecoration(labelText: 'Enter your Password'),
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: auth.isLoading
+                        ? null
+                        : () => auth.register(context),
+                    child: auth.isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Signup',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w800),
+                          ),
                   ),
-                  TextField(
-                    controller: firstNameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your first name'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Second Name',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    controller: secondNameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your second name'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Email',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    controller: emailController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your Email'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Password',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    controller: passwordController,
-                    decoration:
-                        const InputDecoration(labelText: 'Enter your Password'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                    child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Signup',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w800),
-                            ))),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 15),
           RichText(
             text: TextSpan(
-                text: "Already have an account? ",
-                style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Theme.of(context).primaryColorDark),
-                children: [
-                  TextSpan(
-                      text: 'Sign In',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                        })
-                ]),
-          )
+              text: "Already have an account? ",
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Theme.of(context).primaryColorDark,
+              ),
+              children: [
+                TextSpan(
+                  text: 'Sign In',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const LoginPage()));
+                    },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -7,7 +7,7 @@ import 'package:urban_toast/services/api_service.dart';
 class GlobalRefresher {
   /// Call this from anywhere to refresh all app data
   static Future<void> refreshAll(BuildContext context) async {
-    debugPrint("🔄 Starting global data refresh...");
+    debugPrint("Starting global data refresh...");
     try {
       ApiService.clearMemoryCache();
 

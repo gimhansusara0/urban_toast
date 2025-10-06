@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:urban_toast/providers/auth/auth_provider.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
 import 'package:urban_toast/providers/menu_category_provider.dart';
+import 'package:urban_toast/providers/product/menu_product_provider.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
 import 'package:urban_toast/utils/network_manager.dart';
 
@@ -16,6 +18,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => HomeCategoryProvider()),
         ChangeNotifierProvider(create: (_) => MenuCategoryProvider()),
         ChangeNotifierProvider(create: (_) => NetworkManager()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => MenuProductProvider())
       ],
       child: const MyApp(),
     ),

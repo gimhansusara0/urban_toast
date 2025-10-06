@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/providers/menu_category_provider.dart';
+import 'package:urban_toast/providers/product/menu_product_provider.dart';
 
-class MenuCategoryScroller extends StatefulWidget {
+class MenuCategoryScroller extends StatelessWidget {
   const MenuCategoryScroller({super.key});
-
-  @override
-  State<MenuCategoryScroller> createState() => _MenuCategoryScrollerState();
-}
-
-class _MenuCategoryScrollerState extends State<MenuCategoryScroller> {
-  bool _initialized = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      context.read<MenuCategoryProvider>().loadCategories(context);
-      _initialized = true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final categoryProvider = context.watch<MenuCategoryProvider>();
+    final productProvider = context.read<MenuProductProvider>();
 
     if (categoryProvider.isLoading) {
       return const Padding(
@@ -33,7 +19,6 @@ class _MenuCategoryScrollerState extends State<MenuCategoryScroller> {
     }
 
     final categories = categoryProvider.allCategories;
-
     if (categories.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(16),
@@ -64,7 +49,10 @@ class _MenuCategoryScrollerState extends State<MenuCategoryScroller> {
                     category.id == categoryProvider.selectedCategoryId;
 
                 return GestureDetector(
-                  onTap: () => categoryProvider.setCategory(category.id),
+                  onTap: () {
+                    categoryProvider.setCategory(category.id);
+                    productProvider.filterByCategory(category.id);
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
                     margin: const EdgeInsets.symmetric(horizontal: 5),

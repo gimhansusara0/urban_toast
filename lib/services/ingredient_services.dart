@@ -25,7 +25,7 @@ class IngredientService {
       }
       return [];
     } catch (e) {
-      print("⚠️ IngredientService error: $e");
+      print("IngredientService error: $e");
       return [];
     }
   }
