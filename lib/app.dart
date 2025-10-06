@@ -16,7 +16,6 @@ class _MainAppState extends State<MainApp> {
   List<Widget> body = const[
       HomeScreen(),
       ProductScreen(),
-      Cart(),
       MyUserAccount(),
   ];
 
@@ -30,7 +29,9 @@ class _MainAppState extends State<MainApp> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).cardColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ?
+        Theme.of(context).cardColor :
+        Theme.of(context).primaryColor,
         unselectedItemColor: Colors.white,
         selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _currentIndex,

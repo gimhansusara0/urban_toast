@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
 import 'package:urban_toast/providers/menu_category_provider.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
+import 'package:urban_toast/utils/network_manager.dart';
 
 const Color darkColor = Color(0xFF0D0D0D);
 const Color accentColor = Color.fromARGB(255, 182, 107, 63);
@@ -14,12 +15,12 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeCategoryProvider()),
         ChangeNotifierProvider(create: (_) => MenuCategoryProvider()),
+        ChangeNotifierProvider(create: (_) => NetworkManager()),
       ],
       child: const MyApp(),
     ),
   );
 }
-
 
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
@@ -68,6 +69,15 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       home: LoadingScreen(),
+      builder: (context, child) {
+        final network = context.watch<NetworkManager>();
+        return Stack(
+          children: [
+            child!,
+            ConnectionBanner(isOnline: network.isOnline),
+          ],
+        );
+      },
     );
   }
 }

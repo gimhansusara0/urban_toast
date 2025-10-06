@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:urban_toast/screens/auth/register_screen.dart';
+import 'package:urban_toast/utils/network_manager.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final network = context.watch<NetworkManager>();
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -70,6 +73,7 @@ class LoadingScreen extends StatelessWidget {
           ],
         ),
       ),
+      
     );
   }
 }

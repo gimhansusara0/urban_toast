@@ -4,6 +4,7 @@ import 'package:urban_toast/screens/product_detail_screen/components/landscape/p
 import 'package:urban_toast/screens/product_detail_screen/components/landscape/product_img_landscape.dart';
 import 'package:urban_toast/screens/product_detail_screen/components/product_content.dart';
 import 'package:urban_toast/screens/product_detail_screen/components/product_img.dart';
+import 'package:urban_toast/services/ingredient_services.dart';
 
 class ProductDetail extends StatelessWidget {
   final Product product;
@@ -35,6 +36,38 @@ Widget _portraitBuilder(BuildContext context, Product product) {
                 padding: const EdgeInsets.all(20.0),
                 child: ProductImage(product: product),
               ),
+              ElevatedButton.icon(
+  onPressed: () async {
+    final ingredients = await IngredientService.fetchIngredientsForProduct(product.id);
+    if (context.mounted) {
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (_) => Padding(
+          padding: const EdgeInsets.all(20),
+          child: ingredients == null
+              ? const Text("No ingredient details available.")
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Ingredients",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    ...ingredients.map((e) => Text("• $e")).toList(),
+                  ],
+                ),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.keyboard_arrow_up),
+  label: const Text("More Details"),
+),
+
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: ProductContent(product: product),
@@ -73,6 +106,38 @@ Widget _landscapeBuilder(BuildContext context, Product product) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final ingredients = await IngredientService.fetchIngredientsForProduct(product.id);
+                      if (context.mounted) {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (_) => Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: ingredients == null
+                                ? const Text("No ingredient details available.")
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Ingredients",
+                                          style: TextStyle(
+                                              fontSize: 18, fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 10),
+                                      ...ingredients.map((e) => Text("• $e")).toList(),
+                                    ],
+                                  ),
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.keyboard_arrow_up),
+                    label: const Text("More Details"),
+                  ),
+
                   ProductContentLandscape(product: product),
                 ],
               ),

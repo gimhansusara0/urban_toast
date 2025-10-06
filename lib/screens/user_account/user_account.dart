@@ -20,7 +20,7 @@ class MyUserAccount extends StatelessWidget {
 
 Widget _portraitBuilder(BuildContext context) {
   return SingleChildScrollView(
-    child: Container(
+    child: SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height,
       child: Column(
