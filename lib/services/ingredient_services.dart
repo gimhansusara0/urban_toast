@@ -9,7 +9,6 @@ class IngredientService {
 
   static Future<List<String>> fetchIngredientsForProduct(int productId) async {
     try {
-      // Use cached data if available
       if (_cache == null) {
         final response = await http.get(Uri.parse(jsonUrl));
         if (response.statusCode == 200) {

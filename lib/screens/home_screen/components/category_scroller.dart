@@ -56,7 +56,7 @@ class _CategoryScrollerState extends State<CategoryScroller> {
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: SizedBox(
-            height: 36,
+            height: 30,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
@@ -65,45 +65,24 @@ class _CategoryScrollerState extends State<CategoryScroller> {
                 final isSelected =
                     category.id == categoryProvider.selectedCategoryId;
 
-                final bgColor = isSelected
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Theme.of(context).cardColor;
-
                 return GestureDetector(
-                  onTap: () => categoryProvider.setCategory(category.id),
+                  onTap: () =>
+                      categoryProvider.setCategory(category.id),
                   child: Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                        const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                    margin: const EdgeInsets.only(left: 5, right: 5),
                     decoration: BoxDecoration(
-                      color: bgColor,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        if (isSelected)
-                          BoxShadow(
-                            color: Theme.of(context)
-                                .primaryColor
-                                .withOpacity(0.4),
-                            blurRadius: 6,
-                          ),
-                      ],
                     ),
                     child: Center(
                       child: Text(
                         category.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: isSelected
-                              ? Colors.white
-                              : isSelected
-                                  ? Colors.white
-                                  : Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.black
-                                      : Colors.black87,
-                        ),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400),
                       ),
                     ),
                   ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:urban_toast/app.dart';
 import 'package:urban_toast/providers/auth/auth_provider.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
+import 'package:urban_toast/providers/ingredients/ingredient_provider.dart';
 import 'package:urban_toast/providers/menu_category_provider.dart';
 import 'package:urban_toast/providers/product/menu_product_provider.dart';
 import 'package:urban_toast/utils/network_manager.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => NetworkManager()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MenuProductProvider()),
+        ChangeNotifierProvider(create: (_)  => IngredientProvider())
       ],
       child: const MyApp(),
     ),
