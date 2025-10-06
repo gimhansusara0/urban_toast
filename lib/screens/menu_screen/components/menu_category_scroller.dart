@@ -26,11 +26,13 @@ class MenuCategoryScroller extends StatelessWidget {
       );
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
           child: Text(
             'Categories',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -59,7 +61,7 @@ class MenuCategoryScroller extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? Theme.of(context).primaryColor
-                          : Theme.of(context).cardColor,
+                          : (isDark ? Colors.white : Theme.of(context).cardColor),
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: [
                         if (isSelected)
@@ -76,7 +78,9 @@ class MenuCategoryScroller extends StatelessWidget {
                         category.name,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : Colors.black87,
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? Colors.black : Colors.black87),
                         ),
                       ),
                     ),

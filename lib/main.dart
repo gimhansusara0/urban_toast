@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/app.dart';
 import 'package:urban_toast/providers/auth/auth_provider.dart';
+import 'package:urban_toast/providers/cart/cart_provider.dart';
 import 'package:urban_toast/providers/home_category_provider.dart';
 import 'package:urban_toast/providers/ingredients/ingredient_provider.dart';
 import 'package:urban_toast/providers/menu_category_provider.dart';
+import 'package:urban_toast/providers/orders/orders_provider.dart';
 import 'package:urban_toast/providers/product/menu_product_provider.dart';
 import 'package:urban_toast/utils/network_manager.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
@@ -26,7 +28,10 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => NetworkManager()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MenuProductProvider()),
-        ChangeNotifierProvider(create: (_)  => IngredientProvider())
+        ChangeNotifierProvider(create: (_)  => IngredientProvider()),
+        ChangeNotifierProvider(create: (_) => OrdersProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+
       ],
       child: const MyApp(),
     ),

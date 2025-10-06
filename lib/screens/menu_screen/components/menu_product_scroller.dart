@@ -24,7 +24,6 @@ class MenuProductScroller extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-        shrinkWrap: true,
         physics: const AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossaxiscount,
