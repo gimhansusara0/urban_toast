@@ -5,8 +5,8 @@ import 'package:urban_toast/providers/menu_category_provider.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
 import 'package:urban_toast/utils/network_manager.dart';
 
-const Color darkColor = Color(0xFF0D0D0D);
-const Color accentColor = Color.fromARGB(255, 182, 107, 63);
+const Color darkColor = Color.fromARGB(255, 0, 2, 24);
+const Color accentColor = Color(0xfffcab0b);
 const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 
 void main() {

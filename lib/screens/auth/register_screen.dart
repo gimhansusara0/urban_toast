@@ -1,5 +1,5 @@
+import 'dart:ui'; // 👈 Needed for ImageFilter
 import 'package:flutter/material.dart';
-import 'package:urban_toast/screens/auth/components/register/regis_img.dart';
 import 'package:urban_toast/screens/auth/components/register/register_form.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -22,48 +22,118 @@ class RegisterScreen extends StatelessWidget {
 }
 
 Widget _portraitBuilder(BuildContext context) {
-  return SingleChildScrollView(
-    child: Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-      child: Column(
-        children: [
-          SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: RegisterImg()),
-          Expanded(
-              child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(100))),
-            child: RegisterForm(),
-          ))
-        ],
+  final screenHeight = MediaQuery.of(context).size.height;
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  return Stack(
+    children: [
+      // Full background image
+      Positioned.fill(
+        child: Image.asset(
+          'assets/images/zzz-home-4.jpg',
+          fit: BoxFit.cover,
+        ),
       ),
-    ),
+      // overlay for better contrast
+      Positioned.fill(
+        child: Container(color: Colors.black.withOpacity(0.55)),
+      ),
+
+      // Glassy Register Form
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(100),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15), // blur strength 
+            child: Container(
+              width: screenWidth,
+              height: screenHeight * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(100),
+                ),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                child: SingleChildScrollView(child: RegisterForm()),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
   );
 }
 
 Widget _landscapeBuilder(BuildContext context) {
-  return SafeArea(
-    child: Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
+  return Stack(
+    children: [
+      // Background image
+      Positioned.fill(
+        child: Image.asset(
+          'assets/images/zzz-home-4.jpg',
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Row(
-        children: [
-          Expanded(child: RegisterImg()),
-          Expanded(
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor),
-                  child: SingleChildScrollView(child: RegisterForm())))
-        ],
+      Positioned.fill(
+        child: Container(color: Colors.black.withOpacity(0.55)),
       ),
-    ),
+
+      // Glassy Register Form on right
+      Align(
+        alignment: Alignment.centerRight,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(80),
+            bottomLeft: Radius.circular(80),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // blur strength
+            child: Container(
+              width: screenWidth * 0.45,
+              height: screenHeight * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(80),
+                  bottomLeft: Radius.circular(80),
+                ),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.25),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(-3, 0),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(32),
+              child: const SingleChildScrollView(child: RegisterForm()),
+            ),
+          ),
+        ),
+      ),
+    ],
   );
 }

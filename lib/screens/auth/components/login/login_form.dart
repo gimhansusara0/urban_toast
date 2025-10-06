@@ -80,6 +80,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
+          SizedBox(height: 15,),
           RichText(
             text: TextSpan(
               text: "Don't have an account? ",

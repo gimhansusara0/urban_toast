@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/models/product_model.dart';
@@ -77,11 +78,15 @@ class ProductScroller extends StatelessWidget {
                           Expanded(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                product.image,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                              ),
+                              child: CachedNetworkImage(
+                                  imageUrl: product.image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: Colors.grey[200],
+                                    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  ),
+                                  errorWidget: (context, url, error) => const Icon(Icons.broken_image, color: Colors.grey),
+                                )
                             ),
                           ),
                           const SizedBox(height: 8),
