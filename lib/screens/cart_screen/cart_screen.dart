@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:urban_toast/providers/cart/cart_provider.dart';
 import 'package:urban_toast/screens/user_account/services/order_service.dart';
 import 'package:urban_toast/screens/user_account/services/payment_service.dart';
+import 'package:urban_toast/screens/user_account/services/biometric_service.dart';
 import '../../models/cart_item.dart';
 
 class CartPage extends StatefulWidget {
@@ -17,6 +18,19 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   bool _saveCard = false;
+  List<Map<String, dynamic>> _savedCards = [];
+  Map<String, dynamic>? _selectedCard;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCards();
+  }
+
+  Future<void> _loadSavedCards() async {
+    final cards = await PaymentService.getSavedCards();
+    setState(() => _savedCards = cards);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +126,6 @@ class _CartPageState extends State<CartPage> {
     final expCtrl = TextEditingController();
     final csvCtrl = TextEditingController();
 
-    final user = FirebaseAuth.instance.currentUser!;
     final cart = context.read<CartProvider>();
 
     showModalBottomSheet(
@@ -123,117 +136,168 @@ class _CartPageState extends State<CartPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
       builder: (ctx) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(ctx).viewInsets.bottom,
-            left: 16,
-            right: 16,
-            top: 20,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Checkout',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black,
+        return StatefulBuilder(builder: (ctx, setSheetState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(ctx).viewInsets.bottom,
+              left: 16,
+              right: 16,
+              top: 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Checkout',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
+                  const SizedBox(height: 15),
 
-                // Card inputs
-                _styledInput(nameCtrl, "Card Holder's Name", isDark),
-                _styledInput(numCtrl, "Card Number", isDark,
-                    keyboardType: TextInputType.number),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _styledInput(expCtrl, "Expiry (MM/YYYY)", isDark,
+                  // 🔥 Select Saved Card
+                  if (_savedCards.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Select Saved Card'),
+                        const SizedBox(height: 6),
+                        DropdownButtonFormField<Map<String, dynamic>>(
+                          value: _selectedCard,
+                          isExpanded: true,
+                          items: _savedCards.map((c) {
+                            final masked = c['cardNumber']
+                                .toString()
+                                .replaceRange(4, 12, "********");
+                            return DropdownMenuItem(
+                              value: c,
+                              child: Text(
+                                '${masked} (${c['cardHolder']})',
+                                style: TextStyle(
+                                    color:
+                                        isDark ? Colors.white : Colors.black87),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (v) async {
+                            if (v == null) return;
+                            final auth = await BiometricService.authenticateUser();
+                            if (!auth) {
+                              _snack(context, 'Fingerprint auth failed');
+                              return;
+                            }
+                            setSheetState(() => _selectedCard = v);
+                            nameCtrl.text = v['cardHolder'];
+                            numCtrl.text = v['cardNumber'];
+                            expCtrl.text = v['expDate'];
+                            csvCtrl.text = v['csv'];
+                          },
+                          dropdownColor:
+                              isDark ? Colors.grey[850] : Colors.white,
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+                    ),
+
+                  // Card inputs
+                  _styledInput(nameCtrl, "Card Holder's Name", isDark),
+                  _styledInput(numCtrl, "Card Number", isDark,
+                      keyboardType: TextInputType.number),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _styledInput(
+                          expCtrl,
+                          "Expiry (MM/YYYY)",
+                          isDark,
                           keyboardType: TextInputType.number,
                           formatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(6),
                             _ExpiryDateFormatter(),
-                          ]),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _styledInput(csvCtrl, "CSV", isDark,
-                          keyboardType: TextInputType.number),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _styledInput(csvCtrl, "CSV", isDark,
+                            keyboardType: TextInputType.number),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
 
-                // Save card checkbox
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _saveCard,
-                      onChanged: (v) {
-                        setState(() {
-                          _saveCard = v ?? false;
-                        });
+                  // Save card checkbox
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _saveCard,
+                        onChanged: (v) {
+                          setSheetState(() => _saveCard = v ?? false);
+                        },
+                      ),
+                      Text(
+                        'Save this card for future use',
+                        style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Checkout Button
+                  Center(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.payment),
+                      label: const Text('Confirm Payment'),
+                      onPressed: () async {
+                        if (nameCtrl.text.isEmpty ||
+                            numCtrl.text.isEmpty ||
+                            expCtrl.text.isEmpty ||
+                            csvCtrl.text.isEmpty) {
+                          _snack(context, 'Please fill card details');
+                          return;
+                        }
+
+                        if (_saveCard) {
+                          await PaymentService.saveCard(
+                            cardHolder: nameCtrl.text,
+                            cardNumber: numCtrl.text,
+                            expDate: expCtrl.text,
+                            csv: csvCtrl.text,
+                          );
+                          await _loadSavedCards();
+                        }
+
+                        await OrderService.saveOrder(
+                          cartItems: cart.items,
+                          total: cart.subTotal,
+                        );
+
+                        final total = cart.subTotal;
+                        await cart.clearCart();
+                        Navigator.pop(ctx);
+                        _snack(
+                          context,
+                          'Order placed successfully! Total: ${total.toStringAsFixed(2)}',
+                        );
                       },
                     ),
-                    Text(
-                      'Save this card for future use',
-                      style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Checkout Button
-                Center(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.payment),
-                    label: const Text('Checkout'),
-                    onPressed: () async {
-                      if (nameCtrl.text.isEmpty || numCtrl.text.isEmpty) {
-                        _snack(context, 'Please fill card details');
-                        return;
-                      }
-
-                      if (_saveCard) {
-                        await PaymentService.saveCard(
-                          cardHolder: nameCtrl.text,
-                          cardNumber: numCtrl.text,
-                          expDate: expCtrl.text,
-                          csv: csvCtrl.text,
-                        );
-                      }
-
-                      await OrderService.saveOrder(
-                        cartItems: cart.items,
-                        total: cart.subTotal,
-                      );
-
-                      final total = cart.subTotal;
-                      await cart.clearCart();
-                      Navigator.pop(ctx);
-                      _snack(
-                        context,
-                        'Order placed successfully! Total: ${total.toStringAsFixed(2)}',
-                      );
-                    },
                   ),
-                ),
-                const SizedBox(height: 25),
-              ],
+                  const SizedBox(height: 25),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
 
-  // Helper for input style
+  // --- Helper Input ---
   Widget _styledInput(TextEditingController ctrl, String label, bool isDark,
       {TextInputType? keyboardType, List<TextInputFormatter>? formatters}) {
     return TextField(
@@ -245,7 +309,8 @@ class _CartPageState extends State<CartPage> {
         labelText: label,
         labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: isDark ? Colors.white54 : Colors.black38),
+          borderSide:
+              BorderSide(color: isDark ? Colors.white54 : Colors.black38),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: isDark ? Colors.white : Colors.black),
@@ -255,7 +320,7 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-// --- HELPERS ---
+// --- Confirm + Snack helpers ---
 Future<bool> _confirm(BuildContext context, String title, String body) async {
   final res = await showDialog<bool>(
     context: context,
@@ -278,11 +343,10 @@ Future<bool> _confirm(BuildContext context, String title, String body) async {
 }
 
 void _snack(BuildContext context, String msg) {
-  ScaffoldMessenger.of(context)
-      .showSnackBar(SnackBar(content: Text(msg)));
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }
 
-// --- EXPIRY FORMATTER ---
+// --- Expiry date input formatter ---
 class _ExpiryDateFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -299,7 +363,7 @@ class _ExpiryDateFormatter extends TextInputFormatter {
   }
 }
 
-// --- CART ITEM CARD ---
+// --- Cart Item Card ---
 class _CartItemCard extends StatelessWidget {
   final CartItem item;
   final bool isDark;
@@ -431,7 +495,6 @@ class _CartItemCard extends StatelessWidget {
   }
 }
 
-// --- QTY BUTTON ---
 class _QtyBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
