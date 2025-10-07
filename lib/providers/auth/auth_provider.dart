@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:urban_toast/main.dart'; 
 
 class AuthProvider with ChangeNotifier {
   final emailController = TextEditingController();
@@ -27,32 +28,32 @@ class AuthProvider with ChangeNotifier {
     _listenToAuthChanges();
   }
 
-  // Listen to login/logout state changes
+  //  Listen to login/logout state changes
   void _listenToAuthChanges() {
     _auth.authStateChanges().listen((User? user) async {
       _currentUser = user;
       _isLoggedIn = user != null;
 
       if (user != null) {
-        await _fetchUserData(user.uid); // Load profile after login
+        await _fetchUserData(user.uid);
       } else {
-        _userData = null; // Clear data on logout
+        _userData = null;
       }
+
       notifyListeners();
     });
   }
 
-  // Fetch user data from Firestore (cached if offline)
+  // Fetch user data from Firestore
   Future<void> _fetchUserData(String uid) async {
     try {
       final doc = await _firestore.collection('users').doc(uid).get(
-        const GetOptions(source: Source.cache), // Try cache first
+        const GetOptions(source: Source.cache),
       );
 
       if (doc.exists) {
         _userData = doc.data();
       } else {
-        // fallback to server if cache empty
         final onlineDoc = await _firestore.collection('users').doc(uid).get();
         if (onlineDoc.exists) _userData = onlineDoc.data();
       }
@@ -62,7 +63,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //Login
+  // Login
   Future<void> login(BuildContext context) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -76,6 +77,9 @@ class AuthProvider with ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       _showSnack(context, 'Login successful');
+
+      // Navigate to MainApp after login
+      navigatorKey.currentState?.pushReplacementNamed('/mainApp');
     } on FirebaseAuthException catch (e) {
       _showSnack(context, _firebaseError(e));
     } finally {
@@ -83,7 +87,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// Register
+  // Register new user
   Future<void> register(BuildContext context) async {
     final first = firstNameController.text.trim();
     final second = secondNameController.text.trim();
@@ -110,7 +114,9 @@ class AuthProvider with ChangeNotifier {
       });
 
       _showSnack(context, 'Registered successfully');
-      Navigator.pop(context);
+
+      // Redirect to MainApp
+      navigatorKey.currentState?.pushReplacementNamed('/mainApp');
     } on FirebaseAuthException catch (e) {
       _showSnack(context, _firebaseError(e));
     } finally {
@@ -118,8 +124,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Update profile (only when user presses Save)
-  Future<void> updateProfile(BuildContext context, {
+  //  Update profile
+  Future<void> updateProfile(
+    BuildContext context, {
     required String firstName,
     required String secondName,
   }) async {
@@ -132,7 +139,6 @@ class AuthProvider with ChangeNotifier {
         'secondName': secondName,
       });
 
-      // Update local cache immediately
       _userData?['firstName'] = firstName;
       _userData?['secondName'] = secondName;
 
@@ -145,14 +151,18 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Logout
+  // Logout
   Future<void> logout() async {
     await _auth.signOut();
     _userData = null;
+    _isLoggedIn = false;
     notifyListeners();
+
+    //  Redirect to login/loading
+    navigatorKey.currentState?.pushReplacementNamed('/login');
   }
 
-  // --------------- HELPERS -----------------
+  // HELPERS 
 
   void _setLoading(bool value) {
     _isLoading = value;

@@ -3,25 +3,48 @@ import 'package:flutter/material.dart';
 class UserItems extends StatelessWidget {
   final Icon icon;
   final String text;
-  const UserItems({super.key, required this.icon, required this.text});
+  final VoidCallback? onTap;
+  final bool showEditIcon;
+  final Color? textColor;
+
+  const UserItems({
+    super.key,
+    required this.icon,
+    required this.text,
+    this.onTap,
+    this.showEditIcon = true,
+    this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).cardColor,
-      ),
-
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(children: [icon, SizedBox(width: 10,),Text(text)]),
-          SizedBox(width: 10,),
-          Icon(Icons.edit),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 55,
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context).cardColor,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              icon,
+              const SizedBox(width: 10),
+              Text(
+                text,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: textColor ?? Colors.black,
+                    fontWeight: FontWeight.w500),
+              ),
+            ]),
+            if (showEditIcon) const Icon(Icons.chevron_right)
+          ],
+        ),
       ),
     );
   }

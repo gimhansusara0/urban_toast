@@ -12,14 +12,16 @@ import 'package:urban_toast/providers/product/menu_product_provider.dart';
 import 'package:urban_toast/utils/network_manager.dart';
 import 'package:urban_toast/screens/loading/loading_screen.dart';
 
-/// Theme Colors
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 const Color darkColor = Color.fromARGB(255, 0, 1, 17);
 const Color accentColor = Color(0xfffcab0b);
 const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Auto-detects google-services.json
+  await Firebase.initializeApp();
+
   runApp(
     MultiProvider(
       providers: [
@@ -28,17 +30,15 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => NetworkManager()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MenuProductProvider()),
-        ChangeNotifierProvider(create: (_)  => IngredientProvider()),
+        ChangeNotifierProvider(create: (_) => IngredientProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
-
       ],
       child: const MyApp(),
     ),
   );
 }
 
-// Light Theme
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: accentColor,
@@ -53,19 +53,14 @@ final ThemeData lightTheme = ThemeData(
   ),
 );
 
-//  Dark Theme
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: accentColor,
   primaryColorDark: darkColor,
   scaffoldBackgroundColor: darkColor,
-  cardColor: const Color.fromARGB(255, 36, 36, 36),
+  cardColor: Color.fromARGB(255, 36, 36, 36),
   textTheme: const TextTheme(
-    bodyLarge: TextStyle(
-      fontSize: 16,
-      color: Colors.white,
-      fontFamily: 'monserrat',
-    ),
+    bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -75,33 +70,34 @@ final ThemeData darkTheme = ThemeData(
   ),
 );
 
-// App Entry
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Urban Toast',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const AuthWrapper(), // Handles redirect to home/login
+      initialRoute: '/auth',
+      routes: {
+        '/auth': (_) => const AuthWrapper(),
+        '/mainApp': (_) => const MainApp(),
+        '/login': (_) => const LoadingScreen(), // can be replaced with your LoginScreen
+      },
       builder: (context, child) {
         final network = context.watch<NetworkManager>();
         return Stack(
-          children: [
-            child!,
-            ConnectionBanner(isOnline: network.isOnline),
-          ],
+          children: [child!, ConnectionBanner(isOnline: network.isOnline)],
         );
       },
     );
   }
 }
 
-// Auth Wrapper decides if user sees MainApp or LoadingScreen
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
@@ -109,19 +105,16 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    // While Firebase initializes or user check runs
     if (auth.isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    // If logged in show home
     if (auth.isLoggedIn) {
       return const MainApp();
     }
 
-    // If not logged in show login / register (LoadingScreen)
-    return const LoadingScreen();
+    return const LoadingScreen(); // or LoginScreen()
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/models/product_model.dart';
+import 'package:urban_toast/providers/cart/cart_provider.dart';
 import 'package:urban_toast/providers/product/menu_product_provider.dart';
+import 'package:urban_toast/models/cart_item.dart'; 
 import 'package:urban_toast/screens/product_detail_screen/product_detail.dart';
 
 class MenuProductScroller extends StatelessWidget {
@@ -64,6 +66,7 @@ class _ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // image
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -75,6 +78,8 @@ class _ProductCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+
+              //  name, price, plus button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -90,16 +95,49 @@ class _ProductCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        Text('\$${product.price.toStringAsFixed(2)}'),
+                        Text('Rs. ${product.price.toStringAsFixed(2)}'),
                       ],
                     ),
                   ),
+
+                  // plus button
                   SizedBox(
                     width: 40,
+                    height: 40,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
-                      child: const Center(child: Icon(Icons.add)),
+                      onPressed: () async {
+                        final cart = context.read<CartProvider>();
+                        final added = cart.addProduct(
+                          product,
+                          size: ItemSize.s, // default to S when adding from grid
+                        );
+
+                        if (!added) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Item already in cart'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Added ${product.name} to cart'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        backgroundColor: const Color(0xFFD48B5C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.add, color: Colors.white, size: 20),
+                      ),
                     ),
                   ),
                 ],
