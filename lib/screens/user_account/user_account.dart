@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:urban_toast/providers/auth/auth_provider.dart';
+import 'package:urban_toast/providers/user/user_provider.dart';
 import 'package:urban_toast/screens/user_account/components/item.dart';
 import 'package:urban_toast/screens/user_account/services/preference_service.dart';
 import 'package:urban_toast/screens/user_account/services/biometric_service.dart';
@@ -19,23 +19,19 @@ class MyUserAccount extends StatefulWidget {
 }
 
 class _MyUserAccountState extends State<MyUserAccount> {
-  String? _name;
   String? _imagePath;
   bool _biometricsEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadPrefs();
   }
 
-  Future<void> _loadUserData() async {
-     final auth = context.watch<AuthProvider>();
-    // final name = await PreferencesService.getUserName();
+  Future<void> _loadPrefs() async {
     final image = await PreferencesService.getUserImage();
     final bioEnabled = await PreferencesService.getBiometricEnabled();
     setState(() {
-      _name = auth.userData?['firstName'] ?? 'User';
       _imagePath = image;
       _biometricsEnabled = bioEnabled ?? false;
     });
@@ -56,8 +52,7 @@ class _MyUserAccountState extends State<MyUserAccount> {
           child: Wrap(
             children: [
               ListTile(
-                leading:
-                    const Icon(Icons.camera_alt, color: Colors.orangeAccent),
+                leading: const Icon(Icons.camera_alt, color: Colors.orangeAccent),
                 title: Text('Take Photo', style: TextStyle(color: textColor)),
                 onTap: () async {
                   Navigator.pop(context);
@@ -66,8 +61,7 @@ class _MyUserAccountState extends State<MyUserAccount> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo, color: Colors.orangeAccent),
-                title: Text('Choose from Gallery',
-                    style: TextStyle(color: textColor)),
+                title: Text('Choose from Gallery', style: TextStyle(color: textColor)),
                 onTap: () async {
                   Navigator.pop(context);
                   await _pickImage(ImageSource.gallery);
@@ -81,31 +75,22 @@ class _MyUserAccountState extends State<MyUserAccount> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    if (source == ImageSource.camera) {
-      final camStatus = await Permission.camera.request();
-      if (!camStatus.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permission denied to access camera')),
-        );
-        return;
-      }
-    } else {
-      final galStatus = await Permission.photos.request();
-      if (!galStatus.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permission denied to access gallery')),
-        );
-        return;
-      }
+    final status = source == ImageSource.camera
+        ? await Permission.camera.request()
+        : await Permission.photos.request();
+
+    if (!status.isGranted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Permission denied')),
+      );
+      return;
     }
 
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: source, imageQuality: 75);
     if (picked != null) {
       await PreferencesService.saveUserImage(picked.path);
-      setState(() {
-        _imagePath = picked.path;
-      });
+      setState(() => _imagePath = picked.path);
     }
   }
 
@@ -113,9 +98,7 @@ class _MyUserAccountState extends State<MyUserAccount> {
     final isAvailable = await BiometricService.canUseBiometrics();
     if (!isAvailable) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('No biometric hardware or fingerprints enrolled.')),
+        const SnackBar(content: Text('No biometric hardware available.')),
       );
       return;
     }
@@ -143,17 +126,34 @@ class _MyUserAccountState extends State<MyUserAccount> {
       context: context,
       builder: (_) => EditProfileDialog(),
     );
-    if (result == true) _loadUserData();
+    if (result == true && mounted) {
+      await context.read<UserProvider>().refreshUserData();
+    }
   }
 
   void _logout() async {
-    await PreferencesService.clearUserData();
+    await context.read<UserProvider>().logout();
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/login');
   }
 
-  // SHOW SAVED CARDS bottom sheet
-  Future<void> _showSavedCards() async {
+  Future<void> _showPaymentMethods() async {
+    final isAvailable = await BiometricService.canUseBiometrics();
+    if (!isAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Biometric hardware not available.')),
+      );
+      return;
+    }
+
+    if (!_biometricsEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Enable biometrics to access payment methods.')),
+      );
+      return;
+    }
+
     final auth = await BiometricService.authenticateUser();
     if (!auth) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -172,24 +172,79 @@ class _MyUserAccountState extends State<MyUserAccount> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
-      builder: (ctx) {
-        return SafeArea(
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
           child: ListView.builder(
+            shrinkWrap: true,
             itemCount: cards.length,
-            itemBuilder: (_, i) {
+            itemBuilder: (ctx, i) {
               final c = cards[i];
-              final masked = c['cardNumber']
-                  .toString()
-                  .replaceRange(4, 12, "********");
-              return ListTile(
-                leading: const Icon(Icons.credit_card,
-                    color: Colors.orangeAccent),
-                title: Text(masked),
-                subtitle: Text('Expires: ${c['expDate'] ?? '--/--'}'),
+              final masked =
+                  c['cardNumber'].toString().replaceRange(4, 12, "********");
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: ListTile(
+                  leading:
+                      const Icon(Icons.credit_card, color: Colors.orangeAccent),
+                  title: Text(masked),
+                  subtitle: Text(
+                    'Holder: ${c['cardHolder']}\nExp: ${c['expDate'] ?? '--/--'}',
+                  ),
+                  isThreeLine: true,
+                  trailing: Wrap(
+                    spacing: 8,
+                    children: [
+                      IconButton(
+                        tooltip: 'Edit',
+                        icon:
+                            const Icon(Icons.edit, color: Colors.blueAccent),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showEditCardSheet(context, c);
+                        },
+                      ),
+                      IconButton(
+                        tooltip: 'Delete',
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Delete card?'),
+                              content: const Text('This action cannot be undone.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            await PaymentService.deleteCard(c['id']);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Card deleted successfully')),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
           ),
@@ -200,6 +255,11 @@ class _MyUserAccountState extends State<MyUserAccount> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    final userData = userProvider.userData;
+    final isLoading = userProvider.isLoading;
+    final name = isLoading ? 'Loading...' : (userData?['firstName'] ?? 'User');
+
     final textColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.black;
@@ -208,14 +268,14 @@ class _MyUserAccountState extends State<MyUserAccount> {
       body: OrientationBuilder(
         builder: (context, orientation) {
           return orientation == Orientation.portrait
-              ? _portraitBuilder(context, textColor)
-              : _landscapeBuilder(context, textColor);
+              ? _portraitBuilder(context, textColor, name)
+              : _landscapeBuilder(context, textColor, name);
         },
       ),
     );
   }
 
-  Widget _portraitBuilder(BuildContext context, Color textColor) {
+  Widget _portraitBuilder(BuildContext context, Color textColor, String name) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -251,16 +311,9 @@ class _MyUserAccountState extends State<MyUserAccount> {
                         onTap: _showImagePickerSheet,
                         child: Container(
                           padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 5,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
                           ),
                           child: const Icon(Icons.edit,
                               color: Colors.black87, size: 18),
@@ -271,7 +324,7 @@ class _MyUserAccountState extends State<MyUserAccount> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  _name ?? 'User',
+                  name,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -282,132 +335,11 @@ class _MyUserAccountState extends State<MyUserAccount> {
             ),
           ),
           const SizedBox(height: 15),
+          UserItems(icon: const Icon(Icons.edit), text: 'Edit Profile', onTap: _editProfile),
           UserItems(
-            icon: const Icon(Icons.edit),
-            text: 'Edit Profile',
-            onTap: _editProfile,
-          ),
-          UserItems(
-  icon: const Icon(Icons.credit_card),
-  text: 'Payment Methods',
-  onTap: () async {
-    final isAvailable = await BiometricService.canUseBiometrics();
-    if (!isAvailable) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Biometric hardware not available.')),
-      );
-      return;
-    }
-
-    if (!_biometricsEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Enable biometrics to access payment methods.')),
-      );
-      return;
-    }
-
-    final auth = await BiometricService.authenticateUser();
-    if (!auth) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Fingerprint verification failed')),
-      );
-      return;
-    }
-
-    // Fetch cards
-    final cards = await PaymentService.getSavedCards();
-    if (cards.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No saved cards found.')),
-      );
-      return;
-    }
-
-    // Show card list bottom sheet
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).cardColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      ),
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: cards.length,
-            itemBuilder: (ctx, i) {
-              final c = cards[i];
-              final masked = c['cardNumber'].toString().replaceRange(4, 12, "********");
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: ListTile(
-                  leading: const Icon(Icons.credit_card, color: Colors.orangeAccent),
-                  title: Text(masked),
-                  subtitle: Text(
-                    'Holder: ${c['cardHolder']}\nExp: ${c['expDate'] ?? '--/--'}',
-                  ),
-                  isThreeLine: true,
-                  trailing: Wrap(
-                    spacing: 8,
-                    children: [
-                      IconButton(
-                        tooltip: 'Edit',
-                        icon: const Icon(Icons.edit, color: Colors.blueAccent),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _showEditCardSheet(context, c);
-                        },
-                      ),
-                      IconButton(
-                        tooltip: 'Delete',
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text('Delete card?'),
-                              content: const Text('This action cannot be undone.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('Delete'),
-                                ),
-                              ],
-                            ),
-                          );
-                          if (confirm == true) {
-                            await PaymentService.deleteCard(c['id']);
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Card deleted successfully')),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  },
-),
-
-          // Added View Saved Cards
-          UserItems(
-            icon: const Icon(Icons.visibility),
-            text: 'View Saved Cards',
-            onTap: _showSavedCards,
+            icon: const Icon(Icons.credit_card),
+            text: 'Payment Methods',
+            onTap: _showPaymentMethods,
           ),
           UserItems(
             icon: const Icon(Icons.history),
@@ -436,7 +368,7 @@ class _MyUserAccountState extends State<MyUserAccount> {
     );
   }
 
-  Widget _landscapeBuilder(BuildContext context, Color textColor) {
+  Widget _landscapeBuilder(BuildContext context, Color textColor, String name) {
     return Row(
       children: [
         Container(
@@ -445,52 +377,24 @@ class _MyUserAccountState extends State<MyUserAccount> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  ClipOval(
-                    child: _imagePath == null
-                        ? Image.network(
-                            'https://i.pinimg.com/736x/51/f1/c4/51f1c4cf7b732a99471d0beca326d666.jpg',
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(_imagePath!),
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  Positioned(
-                    bottom: 5,
-                    right: 5,
-                    child: GestureDetector(
-                      onTap: _showImagePickerSheet,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 5,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(Icons.edit,
-                            color: Colors.black87, size: 18),
+              ClipOval(
+                child: _imagePath == null
+                    ? Image.network(
+                        'https://i.pinimg.com/736x/51/f1/c4/51f1c4cf7b732a99471d0beca326d666.jpg',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        File(_imagePath!),
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  ),
-                ],
               ),
               const SizedBox(height: 10),
               Text(
-                _name ?? 'User',
+                name,
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -499,12 +403,11 @@ class _MyUserAccountState extends State<MyUserAccount> {
             ],
           ),
         ),
-        Expanded(child: _portraitBuilder(context, textColor)),
+        Expanded(child: _portraitBuilder(context, textColor, name)),
       ],
     );
   }
 }
-
 
 void _showEditCardSheet(BuildContext context, Map<String, dynamic> card) {
   final holderCtrl = TextEditingController(text: card['cardHolder']);

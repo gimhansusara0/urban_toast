@@ -18,10 +18,11 @@ class IngredientService {
         }
       }
 
-      final data = _cache?[productId.toString()];
-      if (data is List) {
-        return List<String>.from(data);
+      final productData = _cache?[productId.toString()];
+      if (productData is Map && productData['ingredients'] is List) {
+        return List<String>.from(productData['ingredients']);
       }
+
       return [];
     } catch (e) {
       print("IngredientService error: $e");

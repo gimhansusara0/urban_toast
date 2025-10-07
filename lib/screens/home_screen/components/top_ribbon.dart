@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:urban_toast/providers/auth/auth_provider.dart';
 
 class TopRibbon extends StatelessWidget {
   const TopRibbon({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.read<AuthProvider>();
+    final userData = context.read<AuthProvider>().userData;
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
@@ -13,8 +17,8 @@ class TopRibbon extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Welcome Lewis!',
+              Text(
+                'Welcome ${userData?['firstName']}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -27,12 +31,7 @@ class TopRibbon extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                     size: 26,
                   ),
-                  const SizedBox(width: 16),
-                  Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Theme.of(context).primaryColor,
-                    size: 26,
-                  ),
+                  
                 ],
               ),
             ],

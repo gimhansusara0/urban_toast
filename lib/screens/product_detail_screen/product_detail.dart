@@ -95,8 +95,7 @@ Widget _landscapeBuilder(BuildContext context, Product product) {
   );
 }
 
-void _showIngredientsSheet(
-    BuildContext context, IngredientProvider provider) {
+void _showIngredientsSheet(BuildContext context, IngredientProvider provider) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -110,20 +109,45 @@ void _showIngredientsSheet(
         child: provider.isLoading
             ? const Center(child: CircularProgressIndicator())
             : provider.ingredients.isEmpty
-                ? const Center(child: Text("No ingredient details available."))
+                ? const Center(
+                    child: Text(
+                      "No ingredient details available.",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  )
                 : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Ingredients",
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Ingredients",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        ...provider.ingredients.map((e) => Text("• $e")),
-                      ],
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ...provider.ingredients.map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Text(
+                                "• $e",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
       ),
     ),
   );
 }
+

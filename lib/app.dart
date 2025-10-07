@@ -39,7 +39,7 @@ class _MainAppState extends State<MainApp> {
             ? Theme.of(context).cardColor
             : Theme.of(context).primaryColor,
         unselectedItemColor: Colors.white,
-        selectedItemColor: Theme.of(context).primaryColorDark,
+        selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _currentIndex,
         onTap: (int newIndex) {
           setState(() => _currentIndex = newIndex);
