@@ -15,7 +15,7 @@ class LoadingScreen extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              "assets/images/zzz-home.jpg",
+              "assets/images/zz-landing.png",
               fit: BoxFit.cover,
             ),
           ),
@@ -26,8 +26,10 @@ class LoadingScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black.withOpacity(0.1), // top darker
-                    Colors.black.withOpacity(0.7), // bottom slightly lighter
+                    Colors.black.withOpacity(0), // top darker
+                    Colors.black.withOpacity(0), // top darker
+                    Colors.black.withOpacity(0.5), // top darker
+                    Colors.black.withOpacity(0.8), // bottom slightly lighter
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

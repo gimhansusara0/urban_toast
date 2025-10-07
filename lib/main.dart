@@ -16,7 +16,7 @@ import 'package:urban_toast/screens/loading/loading_screen.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 const Color darkColor = Color.fromARGB(255, 0, 1, 17);
-const Color accentColor = Color(0xfffcab0b);
+const Color accentColor = Color.fromARGB(255, 255, 172, 6);
 const Color darkHighlight = Color.fromARGB(255, 238, 238, 238);
 
 Future<void> main() async {

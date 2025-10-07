@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_toast/providers/auth/auth_provider.dart';
 import 'package:urban_toast/screens/cart_screen/cart_screen.dart';
+import 'package:urban_toast/screens/gift_coffee_screen/gift_coffee_screen.dart';
 import 'package:urban_toast/screens/home_screen/home_screen.dart';
 import 'package:urban_toast/screens/menu_screen/menu_screen.dart';
 import 'package:urban_toast/screens/user_account/user_account.dart';
@@ -26,7 +27,8 @@ class _MainAppState extends State<MainApp> {
     final List<Widget> pages = [
       const HomeScreen(),
       const ProductScreen(),
-      CartPage(userId: userId), //  connected to your Firebase user
+      const GiftCoffeeScreen(),
+      CartPage(userId: userId), //  connected toFirebase user
       const MyUserAccount(),
     ];
     
@@ -47,6 +49,7 @@ class _MainAppState extends State<MainApp> {
         items: const [
           BottomNavigationBarItem(label: 'Home', icon: Icon(Icons.home)),
           BottomNavigationBarItem(label: 'Products', icon: Icon(Icons.coffee)),
+          BottomNavigationBarItem(label: 'Gift', icon: Icon(Icons.present_to_all)),
           BottomNavigationBarItem(label: 'Cart', icon: Icon(Icons.shopping_cart)),
           BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.person)),
         ],

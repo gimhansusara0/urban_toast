@@ -30,7 +30,7 @@ Widget _portraitBuilder(BuildContext context) {
       // Full background image
       Positioned.fill(
         child: Image.asset(
-          'assets/images/zzz-home-4.jpg',
+          'assets/images/zz-login-regis.png',
           fit: BoxFit.cover,
         ),
       ),
